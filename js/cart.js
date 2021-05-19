@@ -58,19 +58,28 @@ function showCart() {
 }
 
 function removeItemFromCart(event) {
+  
   // TODO: When a delete link is clicked, use cart.removeItem to remove the correct item
   // TODO: Save the cart back to local storage
   // TODO: Re-draw the cart table
-  let iteamLs = JSON.parse(localStorage.getItem('cart'));
+  let iteamLs = JSON.parse(localStorage.getItem("cart"));
   localStorage.removeItem(cart.items[0]);
 
   let myid = event.target.id;
-  let row = document.getElementById(myid).parentElement.rowIndex;
-  console.log(cart.items);
-  // cart.iteams.splice(row,1);
-  // console.log(cart.items);
-  console.log(row);
 
+  let row = document.getElementById(myid).parentElement.rowIndex;
+
+  let newArr = [];
+
+  for (let i = 0; i < cart.items.length; i++) {
+    if (i != row - 2) {
+      newArr.push(cart.items[i]);
+    }
+  }
+  document.getElementById(myid).parentElement.remove();
+
+  cart = new Cart(newArr);
+  cart.saveToLocalStorage();
 
 
 }
