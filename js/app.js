@@ -4,54 +4,61 @@
 const Cart = function (items) {
   // this.items is an array of CartItem instances.
   this.items = items;
-  this.saveToLocalStorage();
 };
 
 Cart.prototype.addItem = function (product, quantity) {
   // TODO: Fill in this instance method to create a new CartItem and add it to this.items
-  for (let i = 0; i < this.items.length; i++) {
-    new CartItem(this.items[i]);
+  this.items = [];
+  let data = JSON.parse(localStorage.getItem("cart"));
+
+  // console.log(this.items.length);
+  if (data != null) {
+    for (let i = 0; i < data.length; i++) {
+      this.items.push(new CartItem(data[i].product, data[i].quantity));
+    }
   }
+
+  let newcartIteam = new CartItem(product, quantity);
+  this.items.push(newcartIteam);
 };
 
 Cart.prototype.saveToLocalStorage = function () {
   // TODO: Fill in this instance method to save the contents of the cart to localStorage
-  let stringfied = JSON.stringify(this.items);
-  localStorage.setItem("cart", stringfied);
+  let data = JSON.stringify(this.items);
+  localStorage.setItem("cart", data);
 };
 
-Cart.prototype.removeItem = function (item) {
+Cart.prototype.removeItem = function (tdID) {
   // TODO: Fill in this instance method to remove one item from the cart.
   // Note: You will have to decide what kind of parameter to pass in here!
+  let row = document.getElementById(tdID).parentElement.rowIndex;
+  let newArr = [];
+  for (let i = 0; i < this.items.length; i++) {
+    if (i != row - 1) {
+      newArr.push(this.items[i].product, this.items[i].quantity);
+    }
+  }
+
+  this.items = [];
+  for (let i = 0; i < newArr.length; i = i + 2) {
+    this.items.push(new CartItem(newArr[i], newArr[i + 1]));
+  }
+  this.saveToLocalStorage();
 };
 
 const CartItem = function (product, quantity) {
   this.product = product;
   this.quantity = quantity;
-  CartItem.items.push(this);
 };
 
-CartItem.items = [];
 // Product contructor.
 const Product = function (filePath, name) {
   this.filePath = filePath;
   this.name = name;
-  this.addToSelect();
   Product.allProducts.push(this);
 };
+
 Product.allProducts = [];
-
-Product.prototype.addToSelect = function () {
-  let selectEl = document.getElementById("items");
-  selectEl.setAttribute("name", "selected");
-  let quantityEl = document.getElementById("quantity");
-  quantityEl.setAttribute("name", "quantity");
-
-  let optionEl = document.createElement("option");
-  optionEl.textContent = this.name;
-  optionEl.setAttribute("value", this.name);
-  selectEl.appendChild(optionEl);
-};
 
 function generateCatalog() {
   new Product("assets/bag.jpg", "Bag");
@@ -78,20 +85,3 @@ function generateCatalog() {
 
 // Initialize the app by creating the big list of products with images and names
 generateCatalog();
-
-let formEl = document.getElementById("catalog");
-formEl.addEventListener("submit", addProduct);
-
-function addProduct(event) {
-  event.preventDefault();
-  let itemName = event.target.selected.value;
-  let quantity = event.target.quantity.value;
-  new CartItem(itemName, quantity);
-
-  let contantDiv = document.getElementById("cartContents");
-  let h1 = document.createElement("h1");
-  h1.textContent = `${itemName} : ${quantity}`;
-  contantDiv.appendChild(h1);
-
-  new Cart(CartItem.items);
-}
