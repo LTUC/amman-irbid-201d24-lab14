@@ -42,12 +42,10 @@ const CartItem = function (product, quantity) {
 const Product = function (filePath, name) {
   this.filePath = filePath;
   this.name = name;
-  new CartItem(this.name);
   Product.allProducts.push(this);
 };
 Product.allProducts = [];
 
-console.log(Product.allProducts);
 
 
 function generateCatalog() {
