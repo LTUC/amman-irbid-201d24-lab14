@@ -40,7 +40,10 @@ function showCart() {
 
 
   for (let index = 0; index < cart.items.length; index++) {
+
+    trEl = document.createElement('tr');
     tdEl = document.createElement('td');
+    tdEl.setAttribute('id', `x${index}`);
     trEl.appendChild(tdEl);
     tdEl.textContent = `x`;
     tdEl = document.createElement('td');
@@ -49,16 +52,26 @@ function showCart() {
     tdEl = document.createElement('td');
     trEl.appendChild(tdEl);
     tdEl.textContent = cart.items[index].quantity;
-    
+    tBody.appendChild(trEl);
+
   }
-console.log(cart.items.length);
 }
 
 function removeItemFromCart(event) {
-
   // TODO: When a delete link is clicked, use cart.removeItem to remove the correct item
   // TODO: Save the cart back to local storage
   // TODO: Re-draw the cart table
+  let iteamLs = JSON.parse(localStorage.getItem('cart'));
+  localStorage.removeItem(cart.items[0]);
+
+  let myid = event.target.id;
+  let row = document.getElementById(myid).parentElement.rowIndex;
+  console.log(cart.items);
+  // cart.iteams.splice(row,1);
+  // console.log(cart.items);
+  console.log(row);
+
+
 
 }
 

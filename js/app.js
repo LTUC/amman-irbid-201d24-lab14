@@ -5,7 +5,6 @@
 const Cart = function (items) {
   // this.items is an array of CartItem instances.
   this.items = items;
-  this.saveToLocalStorage();
 };
 
 
@@ -23,6 +22,10 @@ Cart.prototype.saveToLocalStorage = function () {
   // TODO: Fill in this instance method to save the contents of the cart to localStorage
   let data = JSON.stringify(this.items);
   localStorage.setItem('cart', data);
+  // if (data !== ""){
+  //   localStorage.setItem('cart', data);
+  // }
+  // console.log(data !== "");
 };
 
 
