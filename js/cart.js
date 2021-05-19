@@ -9,6 +9,7 @@ let cart;
 function loadCart() {
   const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
   cart = new Cart(cartItems);
+  console.log(cartItems);
 }
 
 // Make magic happen --- re-pull the Cart, clear out the screen and re-draw it
@@ -19,25 +20,67 @@ function renderCart() {
 }
 
 // TODO: Remove all of the rows (tr) in the cart table (tbody)
-function clearCart() {}
+function clearCart() {
+  let tBody = document.getElementsByTagName('tbody')[0];
+  tBody.textContent = ``;
+}
 
 // TODO: Fill in the <tr>'s under the <tbody> for each item in the cart
 function showCart() {
 
   // TODO: Find the table body
-
+  let tBody = document.getElementsByTagName('tbody')[0];
   // TODO: Iterate over the items in the cart
   // TODO: Create a TR
   // TODO: Create a TD for the delete link, quantity,  and the item
   // TODO: Add the TR to the TBODY and each of the TD's to the TR
+  let trEl = document.createElement('tr');
+  tBody.appendChild(trEl);
+  let tdEl = document.createElement('td');
 
+
+  for (let index = 0; index < cart.items.length; index++) {
+
+    trEl = document.createElement('tr');
+    tdEl = document.createElement('td');
+    tdEl.setAttribute('id', `x${index}`);
+    trEl.appendChild(tdEl);
+    tdEl.textContent = `x`;
+    tdEl = document.createElement('td');
+    trEl.appendChild(tdEl);
+    tdEl.textContent = cart.items[index].product;
+    tdEl = document.createElement('td');
+    trEl.appendChild(tdEl);
+    tdEl.textContent = cart.items[index].quantity;
+    tBody.appendChild(trEl);
+
+  }
 }
 
 function removeItemFromCart(event) {
-
+  
   // TODO: When a delete link is clicked, use cart.removeItem to remove the correct item
   // TODO: Save the cart back to local storage
   // TODO: Re-draw the cart table
+  let iteamLs = JSON.parse(localStorage.getItem("cart"));
+  localStorage.removeItem(cart.items[0]);
+
+  let myid = event.target.id;
+
+  let row = document.getElementById(myid).parentElement.rowIndex;
+
+  let newArr = [];
+
+  for (let i = 0; i < cart.items.length; i++) {
+    if (i != row - 2) {
+      newArr.push(cart.items[i]);
+    }
+  }
+  document.getElementById(myid).parentElement.remove();
+
+  cart = new Cart(newArr);
+  cart.saveToLocalStorage();
+
 
 }
 
